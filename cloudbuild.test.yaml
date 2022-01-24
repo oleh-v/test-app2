@@ -25,8 +25,8 @@ steps:
   id: DEPLOY
 
 substitutions:
-    _FUNCTION_PROJECT : astahov-prod
-    _FUNCTION_NAME    : my-nodejs-app
-    _FUNCTION_REGION  : northamerica-northeast1
-    _FUNCTION_RUNTIME : nodejs14
-    _ENTRY_POINT      : helloWorld
+    _FUNCTION_PROJECT : STAG
+    _FUNCTION_NAME    : my-php-app2
+    _FUNCTION_REGION  : europe-west3
+    _FUNCTION_RUNTIME : PHP 7.4
+    _ENTRY_POINT      : index.php
