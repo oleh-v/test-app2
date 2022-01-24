@@ -25,7 +25,7 @@ steps:
   id: DEPLOY
 
 substitutions:
-    _FUNCTION_PROJECT : STAG
+    _FUNCTION_PROJECT : stag-338410
     _FUNCTION_NAME    : my-php-app2
     _FUNCTION_REGION  : europe-west3
     _FUNCTION_RUNTIME : PHP 7.4
