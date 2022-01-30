@@ -1,32 +1,36 @@
-# This CloudBuild will be triggered by push to main branch
-#
-
+#-----------------------------------------
+# CloudBuild Pipeline for Staging CloudRun
+#-----------------------------------------
 steps:
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args: ['echo', 'Building...']
-  id: BUILD
-  
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args: ['echo', 'Testing...']
-  id: TEST  
-  
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args:
-  - gcloud
-  - functions
-  - deploy
-  - $_FUNCTION_NAME
-  - --region=$_FUNCTION_REGION
-  - --source=.
-  - --trigger-http
-  - --runtime=$_FUNCTION_RUNTIME
-  - --project=$_FUNCTION_PROJECT
-  - --entry-point=$_ENTRY_POINT
-  id: DEPLOY
+# Docker Build Image
+  - name: gcr.io/cloud-builders/docker
+    id  : BUILD
+    args: ['build', '-t', '$_SERVICE_IMAGE', '.', '-f', 'Dockerfile']
+
+# Docker Push Image to Artifact Registry
+  - name: gcr.io/cloud-builders/docker
+    id  : PUSH
+    args: ['push', '$_SERVICE_IMAGE']
+
+# Docker Deploy image to Cloud Run
+  - name: gcr.io/cloud-builders/gcloud
+    id  : DEPLOY
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - --project=$_SERVICE_PROJECT
+      - --region=$_SERVICE_REGION
+      - --image=$_SERVICE_IMAGE
+
+images: # Display the image in the build results - Build Artifacts
+- $_SERVICE_IMAGE
 
 substitutions:
-    _FUNCTION_PROJECT : stag-338410
-    _FUNCTION_NAME    : my-php-app2
-    _FUNCTION_REGION  : europe-west3
-    _FUNCTION_RUNTIME : PHP 7.4
-    _ENTRY_POINT      : index.php
+    _SERVICE_IMAGE    : europe-west3-docker.pkg.dev/${PROJECT_ID}/${_DOCKER_REGISTRY}/${_DOCKER_IMAGENAME}:${SHORT_SHA}
+    _SERVICE_REGION   : europe-west3
+    _SERVICE_PROJECT  : prod-338410
+    _SERVICE_NAME     : my-docker-app-prod
+    _DOCKER_REGISTRY  : aleh-test-docker1
+    _DOCKER_IMAGENAME : myapp-dev
