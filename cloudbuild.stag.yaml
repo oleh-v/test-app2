@@ -32,5 +32,5 @@ substitutions:
     _SERVICE_REGION   : europe-west3
     _SERVICE_PROJECT  : prod-338410
     _SERVICE_NAME     : my-docker-app-prod
-    _DOCKER_REGISTRY  : astahov-docker-repo
+    _DOCKER_REGISTRY  : aleh-test-docker1
     _DOCKER_IMAGENAME : myapp-staging
